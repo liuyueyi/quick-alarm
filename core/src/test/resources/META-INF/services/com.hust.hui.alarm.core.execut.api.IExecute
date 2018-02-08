@@ -1,0 +1,3 @@
+com.hust.hui.alarm.core.test.execute.EmailExecute
+com.hust.hui.alarm.core.test.execute.SmsExecute
+com.hust.hui.alarm.core.test.execute.WeiXinExecute
