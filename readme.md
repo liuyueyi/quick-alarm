@@ -104,9 +104,13 @@
 
 ### 1. 相关文档
 
-1. [报警系统QuickAlarm总纲](https://liuyueyi.github.io/hexblog/2018/02/09/%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FQuickAlarm%E6%80%BB%E7%BA%B2/)
-2. [报警系统QuickAlarm之报警执行器的设计与实现](https://liuyueyi.github.io/hexblog/2018/02/09/%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FQuickAlarm%E4%B9%8B%E6%8A%A5%E8%AD%A6%E6%89%A7%E8%A1%8C%E5%99%A8%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/)
-3. [报警系统QuickAlarm之报警规则的设定与加载](https://liuyueyi.github.io/hexblog/2018/02/09/%E6%8A%A5%E8%AD%A6%E7%B3%BB%E7%BB%9FQuickAlarm%E4%B9%8B%E6%8A%A5%E8%AD%A6%E8%A7%84%E5%88%99%E7%9A%84%E8%AE%BE%E5%AE%9A%E4%B8%8E%E5%8A%A0%E8%BD%BD/)
+### 相关博文
+
+1. [报警系统QuickAlarm总纲](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm总纲/)
+2. [报警系统QuickAlarm之报警执行器的设计与实现](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警执行器的设计与实现/)
+3. [报警系统QuickAlarm之报警规则的设定与加载](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警规则的设定与加载/)
+4. [报警系统QuickAlarm之报警规则解析](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之报警规则解析/)
+5. [报警系统QuickAlarm之频率统计及接口封装](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之频率统计及接口封装/)
 
 ### 2. 历程
 
@@ -123,7 +127,7 @@
 - 剥离报警规则和解析器，支持用户自定义
 - 包装邮件报警方式
 - 包装微信报警方式
-
+- 支持多重报警类型同时选择
 
 
 ## VI. 其他
@@ -139,4 +143,11 @@
 
 ### 扫描关注
 
+公众号&博客
+
 ![QrCode](https://s17.mogucdn.com/mlcdn/c45406/180209_74fic633aebgh5dgfhid2fiiggc99_1220x480.png)
+
+
+打赏码
+
+![pay](https://s11.mogucdn.com/mlcdn/c45406/180211_1ic7ic78jf8ib5chae60lkab3271j_1220x478.png)
