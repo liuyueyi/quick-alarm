@@ -5,10 +5,14 @@ import com.hust.hui.alarm.core.loader.helper.PropertiesConfListenerHelper;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * 测试文件变更
@@ -60,6 +64,41 @@ public class FileUpTest {
         PropertiesConfListenerHelper.registerConfChangeListener(
                 new File("/tmp/alarmConfig"),
                 this::parse);
+
+
+        try {
+            Thread.sleep(1000 * 60 * 10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void testFileUpWather() throws IOException {
+        Path path = Paths.get("/tmp");
+        WatchService watcher = FileSystems.getDefault().newWatchService();
+        path.register(watcher, ENTRY_MODIFY);
+
+        new Thread(() -> {
+            try {
+                while (true) {
+                    WatchKey key = watcher.take();
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        if (event.kind() == OVERFLOW) {//事件可能lost or discarded
+                            continue;
+                        }
+                        Path fileName = (Path) event.context();
+                        System.out.println("文件更新: " + fileName);
+                    }
+                    if (!key.reset()) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
 
         try {

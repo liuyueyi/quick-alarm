@@ -1,5 +1,6 @@
 package com.hust.hui.alarm.core.entity;
 
+import com.hust.hui.alarm.core.execut.api.IExecute;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -43,7 +44,7 @@ public class AlarmConfig {
 
 
     /**
-     * 报警类型
+     * 报警类型 {@link IExecute#getName()}
      */
     private String alarmLevel;
 
