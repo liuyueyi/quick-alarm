@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.hust.hui.alarm</groupId>
             <artifactId>common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${alarm.version}</version>
         </dependency>
 
     </dependencies>
