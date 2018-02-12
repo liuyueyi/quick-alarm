@@ -7,13 +7,14 @@
     <groupId>com.hust.hui.alarm</groupId>
     <artifactId>quick-alarm</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${alarm.version}</version>
     <modules>
         <module>common</module>
         <module>core</module>
     </modules>
 
     <properties>
+        <alarm.version>0.1</alarm.version>
         <commons-lang.version>3.5</commons-lang.version>
         <commons-io.version>2.6</commons-io.version>
         <lombok.version>1.16.8</lombok.version>

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>quick-alarm</artifactId>
         <groupId>com.hust.hui.alarm</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${alarm.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

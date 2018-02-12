@@ -125,7 +125,7 @@
 <dependency>
     <groupId>com.hust.hui.alarm</groupId>
     <artifactId>core</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
 </dependency>
 ```
 
@@ -257,7 +257,7 @@ public void sendMsg() throws InterruptedException {
 - [x] 2018.02.07
     - 整体框架搭建完成
     - 基本功能实现 
-- [x] 2018.02.13
+- [x] 2018.02.12 :  [v0.1 正式包](https://github.com/liuyueyi/quick-alarm/releases/tag/v0.1)
     - 项目开发技术文档完成
     - 开发使用手册完成
 
