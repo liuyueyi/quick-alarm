@@ -242,8 +242,6 @@ public void sendMsg() throws InterruptedException {
 
 ### 1. 相关文档
 
-### 相关博文
-
 1. [报警系统QuickAlarm总纲](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm总纲/)
 2. [报警系统QuickAlarm之报警执行器的设计与实现](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警执行器的设计与实现/)
 3. [报警系统QuickAlarm之报警规则的设定与加载](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警规则的设定与加载/)
