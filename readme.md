@@ -102,6 +102,144 @@
 
 ## V. 整体说明
 
+### 0. 简单使用case
+
+#### a. 引入依赖
+
+基于maven项目，如下配置
+
+先添加仓库
+
+```xml
+<repositories>
+    <repository>
+        <id>yihui-maven-repo</id>
+        <url>https://raw.githubusercontent.com/liuyueyi/maven-repository/master/repository</url>
+    </repository>
+</repositories>
+```
+
+引入依赖
+
+```xml
+<dependency>
+    <groupId>com.hust.hui.alarm</groupId>
+    <artifactId>core</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+也可以直接在将代码拷贝下来使用
+
+#### b. 添加基本配置文件
+
+如果使用系统默认的配置注册方式，则在项目的资源目录下新增文件
+
+alarm.properties
+
+```
+## 应用名，必填
+appName=test
+
+## 报警规则文件所在的路径，如果采用系统默认加载方式，必填
+## / 开头，表示存的是绝对路径
+## 非/开头，表示存的是系统相对路径，一般是放在资源目录下
+alarmConfPath=/tmp/alarmConfig
+
+## 最大的报警类型，非必填
+maxAlarmType=1000
+
+## 默认报警用户，必填
+defaultAlarmUsers=yihui
+```
+
+
+请注意其中的 `alramConfPath` 参数，这个指定报警规则文件的路径, 然后根据这个路径，添加报警规则文件，一个case如下:
+
+(说明，外层的key为报警类型，default为默认的兜底规则，支持多个报警规则共享一个配置项，只需要用英文逗号分割即可，如下面的NPE, SELFDEFINE两种报警类型)
+
+```json
+{
+    "default": {
+        "level": "NONE",
+        "autoIncEmergency": true,
+        "max": 30,
+        "min": 3,
+        "threshold": [
+            {
+                "level": "LOG",
+                "threshold": 5,
+                "users": [
+                    "yihui",
+                    "erhui"
+                ]
+            }
+        ],
+        "users": [
+            "yihui"
+        ]
+    },
+    "NPE,SELFDEFINE": {
+        "level": "LOG",
+        "autoIncEmergency": false,
+        "max": 30,
+        "min": 0,
+        "threshold": [
+            {
+                "level": "SMS",
+                "threshold": 20,
+                "users": [
+                    "345345345345",
+                    "123123123123"
+                ]
+            },
+            {
+                "level": "WEIXIN",
+                "threshold": 10,
+                "users": [
+                    "小灰灰Blog",
+                    "greyBlog"
+                ]
+            }
+        ],
+        "users": [
+            "yihui"
+        ]
+    }
+}
+```
+
+#### c. 报警调用
+
+一个测试case如下
+
+```java
+@Test
+public void sendMsg() throws InterruptedException {
+    String key = "NPE";
+    String title = "NPE异常";
+    String msg = "出现NPE异常了!!!";
+    AlarmWrapper.getInstance().sendMsg(key, title, msg);
+
+    // 不存在异常配置类型, 采用默认报警, 次数较小, 则直接不输出
+    AlarmWrapper.getInstance().sendMsg("zzz", "不存在xxx异常配置", "报警嗒嗒嗒嗒");
+
+    // 确保报警执行完毕，再退出任务
+    Thread.sleep(1000);
+}
+```
+
+#### d. 更多
+
+对于如何扩展自定义报警执行器，如何使用自定义的配置文件加载类替换系统的，可以参考更详细文档： [报警系统QuickAlarm使用手册](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm使用手册/)
+
+
+如有任何问题，随时欢迎联系，通过issuse，email，微博都可以
+
+这是个人信息主页: [小灰灰Blog](https://liuyueyi.github.io/hexblog/about/)
+
+
+
 ### 1. 相关文档
 
 ### 相关博文
@@ -111,6 +249,8 @@
 3. [报警系统QuickAlarm之报警规则的设定与加载](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警规则的设定与加载/)
 4. [报警系统QuickAlarm之报警规则解析](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之报警规则解析/)
 5. [报警系统QuickAlarm之频率统计及接口封装](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之频率统计及接口封装/)
+6. [报警系统QuickAlarm使用手册](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm使用手册/)
+
 
 ### 2. 历程
 
@@ -150,4 +290,4 @@
 
 打赏码
 
-![pay](https://s11.mogucdn.com/mlcdn/c45406/180211_1ic7ic78jf8ib5chae60lkab3271j_1220x478.png)
+![pay](https://s3.mogucdn.com/mlcdn/c45406/180211_3a9igegd1bghf1dl26f3777aldijk_1218x478.png)
