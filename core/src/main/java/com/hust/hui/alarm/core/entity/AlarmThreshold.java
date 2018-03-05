@@ -1,5 +1,6 @@
 package com.hust.hui.alarm.core.entity;
 
+import com.hust.hui.alarm.core.execut.api.IExecute;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,13 +18,18 @@ public class AlarmThreshold implements Comparable<AlarmThreshold> {
     /**
      * 报警类型
      */
-    private String alarmLevel;
+    private IExecute executor;
 
 
     /**
      * 晋升此报警的阀值
+     *
+     * 报警计数count >= min && count < max, 则选择
      */
-    private int threshold;
+    private int min;
+
+
+    private int max;
 
 
     /**
@@ -38,6 +44,6 @@ public class AlarmThreshold implements Comparable<AlarmThreshold> {
             return -1;
         }
 
-        return threshold - o.getThreshold();
+        return min - o.getMin();
     }
 }

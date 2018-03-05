@@ -1,13 +1,14 @@
 package com.hust.hui.alarm.core.execut;
 
 
-import com.hust.hui.alarm.core.execut.spi.NoneExecute;
 import com.hust.hui.alarm.core.entity.AlarmConfig;
 import com.hust.hui.alarm.core.entity.AlarmThreshold;
+import com.hust.hui.alarm.core.execut.spi.NoneExecute;
 import com.hust.hui.alarm.core.helper.ExecuteHelper;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 报警选择器, 选择具体的 IExecut 执行报警
@@ -30,64 +31,33 @@ public class AlarmExecuteSelector {
      *
      * @param alarmConfig 报警配置项, 内部所有的参数都不可能为null
      */
-    public static ExecuteHelper getExecute(final AlarmConfig alarmConfig, int count) {
+    public static List<ExecuteHelper> getExecute(final AlarmConfig alarmConfig, int count) {
         // 未达到报警的下限 or 超过报警的上限时
         if (count < alarmConfig.getMinLimit() || count > alarmConfig.getMaxLimit()) {
-            return new ExecuteHelper(SimpleExecuteFactory.getExecute(NoneExecute.NAME), alarmConfig.getUsers());
+            return Collections.singletonList(new ExecuteHelper(SimpleExecuteFactory.getExecute(NoneExecute.NAME), alarmConfig.getUsers()));
         }
 
 
         // 未开启报警升级, 直接返回
         if (!alarmConfig.isAutoIncEmergency()) {
-            return new ExecuteHelper(SimpleExecuteFactory.getExecute(alarmConfig.getAlarmLevel()), alarmConfig.getUsers());
+            return Collections.singletonList(new ExecuteHelper(alarmConfig.getExecutor(), alarmConfig.getUsers()));
         }
 
-
-        // 报警等级开启上升之趋势
-        // 1. 获取设置的默认等级
-        // 2. 判断当前的报警次数, 选择对应的报警类型
-        // 3. 选择具体的报警类型
-
-        String defaultLevel = alarmConfig.getAlarmLevel();
-        String selectLevel = null;
-        List<String> selectUser = alarmConfig.getUsers();
-
-        List<AlarmThreshold> list = alarmConfig.getAlarmThreshold();
-        boolean useNew = false;
-        boolean containDefaultLevel = false;
-        for (AlarmThreshold alarmThreshold : list) {
-            if (Objects.equals(alarmThreshold.getAlarmLevel(), defaultLevel)) {
-                containDefaultLevel = true;
-            }
+        if (count < alarmConfig.getAlarmThreshold().get(0).getMin()) {
+            // 未达到报警的下限
+            return Collections.singletonList(new ExecuteHelper(SimpleExecuteFactory.getExecute(NoneExecute.NAME), alarmConfig.getUsers()));
         }
 
-
-        for (AlarmThreshold alarmThreshold : list) {
-            // 表示当前的报警等级已经赶上默认的报警等级了, 所以要选择新的报警类型
-            if (Objects.equals(alarmThreshold.getAlarmLevel(), defaultLevel)) {
-                useNew = true;
+        List<ExecuteHelper> list = new ArrayList<>();
+        for(AlarmThreshold alarmThreshold: alarmConfig.getAlarmThreshold()) {
+            if (alarmThreshold.getMin() <= count && count < alarmThreshold.getMax()) {
+                list.add(new ExecuteHelper(alarmThreshold.getExecutor(), alarmThreshold.getUsers()));
             }
 
-            if (count < alarmThreshold.getThreshold()) {
+            if(alarmThreshold.getMin() > count) {
                 break;
             }
-
-            selectLevel = alarmThreshold.getAlarmLevel();
-            selectUser = alarmThreshold.getUsers(); // 选择新的报警类型时, 需要更新报警用户
         }
-
-
-        // 阀值列表中不包含默认报警类型，则根据新的来
-        if (!containDefaultLevel && selectLevel != null) {
-            return new ExecuteHelper(SimpleExecuteFactory.getExecute(selectLevel), selectUser);
-        }
-
-
-        // 如果阀值列表中包含了默认报警类型, 且已经超过默认阀值
-        if (useNew && selectLevel != null) {
-            return new ExecuteHelper(SimpleExecuteFactory.getExecute(selectLevel), selectUser);
-        } else {
-            return new ExecuteHelper(SimpleExecuteFactory.getExecute(defaultLevel), alarmConfig.getUsers());
-        }
+        return list;
     }
 }

@@ -95,5 +95,43 @@
         "users": [
             "yihui@xxx.com"
         ]
+    },
+    "ZZZ": {
+        "level": "LOG",
+        "autoIncEmergency": true,
+        "max": 30,
+        "min": 3,
+        "threshold": [
+            {
+                "level": "SMS",
+                "threshold": 20,
+                "max": 27,
+                "users": [
+                    "345345345345",
+                    "123123123123"
+                ]
+            },
+            {
+                "level": "WEIXIN",
+                "threshold": 10,
+                "users": [
+                    "yihui",
+                    "erhui"
+                ]
+            },
+            {
+                "level": "EMAIL",
+                "threshold": 9,
+                "max": 14,
+                "users": [
+                    "yihui@xxx.com",
+                    "erhui@xxx.com"
+                ]
+            }
+        ],
+        "users": [
+            "yihui@xxx.com"
+        ]
     }
+
 }

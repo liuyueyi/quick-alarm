@@ -2,6 +2,7 @@ package com.hust.hui.alarm.core.test.loader;
 
 
 import com.hust.hui.alarm.core.entity.AlarmConfig;
+import com.hust.hui.alarm.core.execut.SimpleExecuteFactory;
 import com.hust.hui.alarm.core.loader.api.IConfLoader;
 import com.hust.hui.alarm.core.loader.entity.RegisterInfo;
 
@@ -31,7 +32,7 @@ public class SelfAlarmConfLoader implements IConfLoader {
         //db 查询，获取对应的配置信息
         // 下面是模拟，返回一个固定的配置
         AlarmConfig alarmConfig = new AlarmConfig();
-        alarmConfig.setAlarmLevel("WEIXIN");
+        alarmConfig.setExecutor(SimpleExecuteFactory.getExecute("WEIXIN"));
         alarmConfig.setAutoIncEmergency(false);
         alarmConfig.setMinLimit(10);
         alarmConfig.setMaxLimit(14);

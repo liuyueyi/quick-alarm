@@ -28,7 +28,7 @@ public class SimpleExecuteFactory {
                 map.put(tmp.getName(), tmp);
             } else {
                 throw new DuplicatedAlarmExecuteDefinedException(
-                        "duplicated alarm execute defined!" +
+                        "duplicated alarm executor defined!" +
                                 "\n" +
                                 ">>name:" +
                                 tmp.getName() +

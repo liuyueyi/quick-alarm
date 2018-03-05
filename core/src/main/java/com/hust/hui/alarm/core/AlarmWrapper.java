@@ -2,8 +2,6 @@ package com.hust.hui.alarm.core;
 
 
 import com.hust.hui.alarm.common.concurrent.DefaultThreadFactory;
-import com.hust.hui.alarm.core.entity.AlarmConfig;
-import com.hust.hui.alarm.core.execut.AlarmExecuteSelector;
 import com.hust.hui.alarm.core.helper.ExecuteHelper;
 import com.hust.hui.alarm.core.loader.ConfLoaderFactory;
 import com.hust.hui.alarm.core.loader.api.IConfLoader;
@@ -12,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -84,34 +83,26 @@ public class AlarmWrapper {
 
 
     /**
-     * 1. 获取报警的配置项
-     * 2. 获取当前报警的次数
-     * 3. 选择适当的报警类型
-     * 4. 执行报警
-     * 5. 报警次数+1
+     *
+     * 1. 报警计数
+     * 2. 获取报警执行器
+     * 3. 执行报警
      *
      * @param alarmContent
      */
     private void sendMsg(AlarmContent alarmContent) {
         try {
-            // get alarm config
-            AlarmConfig alarmConfig = confLoader.getAlarmConfig(alarmContent.key);
-
             // get alarm count
             int count = getAlarmCount(alarmContent.key);
             alarmContent.setCount(count);
 
 
-            ExecuteHelper executeHelper;
-            if (confLoader.alarmEnable()) { // get alarm execute
-                executeHelper = AlarmExecuteSelector.getExecute(alarmConfig, count);
-            } else {  // 报警关闭, 则走空报警流程, 将报警信息写入日志文件
-                executeHelper = AlarmExecuteSelector.getDefaultExecute();
-            }
+            // get alarm executor
+            List<ExecuteHelper> executeHelper = confLoader.getExecuteHelper(alarmContent.key, count);
 
 
             // do send msg
-            doSend(executeHelper, alarmContent);
+            executeHelper.forEach(executeHelper1 -> doSend(executeHelper1, alarmContent));
         } catch (Exception e) {
             logger.error("AlarmWrapper.sendMsg error! content:{}, e:{}", alarmContent, e);
         }
