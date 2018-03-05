@@ -44,9 +44,9 @@ public class AlarmConfig {
 
 
     /**
-     * 报警类型 {@link IExecute#getName()}
+     * 报警执行器
      */
-    private String alarmLevel;
+    private IExecute executor;
 
 
     /**

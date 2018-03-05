@@ -242,13 +242,19 @@ public void sendMsg() throws InterruptedException {
 
 ### 1. 相关文档
 
+**v0.1版相关文档**
+
 1. [报警系统QuickAlarm总纲](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm总纲/)
 2. [报警系统QuickAlarm之报警执行器的设计与实现](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警执行器的设计与实现/)
 3. [报警系统QuickAlarm之报警规则的设定与加载](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm之报警规则的设定与加载/)
 4. [报警系统QuickAlarm之报警规则解析](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之报警规则解析/)
 5. [报警系统QuickAlarm之频率统计及接口封装](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之频率统计及接口封装/)
 6. [报警系统QuickAlarm使用手册](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm使用手册/)
+7. [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
 
+**v0.2版改进文档**
+
+1. [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
 
 ### 2. 历程
 
@@ -258,7 +264,10 @@ public void sendMsg() throws InterruptedException {
 - [x] 2018.02.12 :  [v0.1 正式包](https://github.com/liuyueyi/quick-alarm/releases/tag/v0.1)
     - 项目开发技术文档完成
     - 开发使用手册完成
-
+- [x] 2018.03.05
+    - 扩展默认的报警配置项
+    - 支持多重报警类型同时选择
+    - 详情参考: [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
 
 ### 3. todoList
 

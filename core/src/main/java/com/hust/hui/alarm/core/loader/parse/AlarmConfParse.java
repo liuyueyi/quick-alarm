@@ -7,6 +7,7 @@ import com.hust.hui.alarm.core.entity.AlarmConfig;
 import com.hust.hui.alarm.core.entity.AlarmThreshold;
 import com.hust.hui.alarm.core.entity.BasicAlarmConfig;
 import com.hust.hui.alarm.core.entity.BasicAlarmThreshold;
+import com.hust.hui.alarm.core.execut.SimpleExecuteFactory;
 import com.hust.hui.alarm.core.execut.spi.LogExecute;
 import com.hust.hui.alarm.core.execut.spi.NoneExecute;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +117,7 @@ public class AlarmConfParse {
         AlarmConfig alarmConfig = new AlarmConfig();
 
         // 如果配置的报警类型是异常的, 则下面会兼容一把，设置为 NONE, 避免因为配置的原因导致系统异常
-        alarmConfig.setAlarmLevel(basicAlarmConfig.getLevel());
+        alarmConfig.setExecutor(SimpleExecuteFactory.getExecute(basicAlarmConfig.getLevel()));
         alarmConfig.setAutoIncEmergency(basicAlarmConfig.isAutoIncEmergency());
         // 报警用户, 要求用户必须存在
         alarmConfig.setUsers(basicAlarmConfig.getUsers());
@@ -126,18 +127,97 @@ public class AlarmConfParse {
         alarmConfig.setMinLimit(basicAlarmConfig.getMin() == null ? AlarmConfig.DEFAULT_MIN_NUM : basicAlarmConfig.getMin());
 
 
-        List<AlarmThreshold> alarmThresholdList = new ArrayList<>(basicAlarmConfig.getThreshold().size());
-        for (BasicAlarmThreshold basicAlarmThreshold : basicAlarmConfig.getThreshold()) {
-            AlarmThreshold temp = new AlarmThreshold();
-            temp.setAlarmLevel(basicAlarmThreshold.getLevel());
-            temp.setThreshold(basicAlarmThreshold.getThreshold());
-            temp.setUsers(basicAlarmThreshold.getUsers());
+        /**
+         *  如果配置的basicAlarmThresholdList列表中包含默认的报警方式
+         *    - 则报警方式完全按照basicAlarmThresholdList的定义来
+         *    - eg: 默认报警为 Log, min=5, max=30
+         *    -       basicAlarmThresholdList 中定义为  : { Log, min=6 }, { Email, min=8 }, { WeiXin, min=10, max=16 }, { SMS, min=14, max=26 }
+         *    - 则转换后的 alarmThresholdList为:
+         *    -     { Log, min=6, max=8 }, { Email, min=8, max=10 }, { WeiXin, min=10, max=16 }, { SMS, min=14, max=26 }
+         *    -       count : [6, 8)  Log
+         *    -       count : [8, 10) Email
+         *    -       count : [10, 16) WeiXin
+         *    -       count : [14, 26) SMS
+         *
+         *  如果不包含默认报警方式
+         *    - 则需要补全最外层定义的Min-Max区间中的空余位
+         *    - eg:   默认报警为 Log, min=5, max=30
+         *    -       basicAlarmThresholdList 中定义为  : { Email, min=8 }, { WeiXin, min=10, max=16 }, { SMS, min=14, max=26 }
+         *    - 则转换后的 alarmThresholdList为:
+         *    -       { Log, min=5, max=8 }, { Email, min=8, max=10 }, { WeiXin, min=10, max=16 }, { SMS, min=14, max=26 }, { Log, min=26, max=30 }
+         *    -       count : [5, 8)  Log
+         *    -       count : [8, 10) Email
+         *    -       count : [10, 16) WeiXin
+         *    -       count : [14, 26) SMS
+         *    -       count : [26, 30) Log
+         *
+         *
+         *    上面改造后，很容易得知，支持多重报警方式同时工作，即当技术为14，15 时，同时发起WeiXin和SMS报警
+         */
 
-            alarmThresholdList.add(temp);
+        // 获取配置中的阀值列表，并排序
+        List<BasicAlarmThreshold> basicAlarmThresholdList = basicAlarmConfig.getThreshold();
+        if(basicAlarmThresholdList == null) {
+            basicAlarmThresholdList = Collections.emptyList();
+        }
+        basicAlarmThresholdList.sort(Comparator.comparingInt(BasicAlarmThreshold::getThreshold));
+
+        List<AlarmThreshold> alarmThresholdList = new ArrayList<>(basicAlarmThresholdList.size() + 2);
+        AlarmThreshold tmpAlarmThreshold;
+        BasicAlarmThreshold tmpBasicAlarmThreshold;
+        boolean containDefaultExecute = false;
+        for (int i = 0; i < basicAlarmThresholdList.size(); i++) {
+            tmpBasicAlarmThreshold = basicAlarmThresholdList.get(i);
+            tmpAlarmThreshold = new AlarmThreshold();
+            tmpAlarmThreshold.setExecutor(SimpleExecuteFactory.getExecute(tmpBasicAlarmThreshold.getLevel()));
+            tmpAlarmThreshold.setUsers(tmpBasicAlarmThreshold.getUsers());
+            tmpAlarmThreshold.setMin(tmpBasicAlarmThreshold.getThreshold());
+            if (tmpBasicAlarmThreshold.getMax() == null || tmpBasicAlarmThreshold.getMax() <= tmpBasicAlarmThreshold.getThreshold()) {
+                if (i == basicAlarmThresholdList.size() - 1) { // 最后一个，则使用默认的上限阀值
+                    tmpAlarmThreshold.setMax(alarmConfig.getMaxLimit());
+                } else {
+                    tmpAlarmThreshold.setMax(basicAlarmThresholdList.get(i + 1).getThreshold());
+                }
+            } else {
+                tmpAlarmThreshold.setMax(tmpBasicAlarmThreshold.getMax());
+            }
+
+            if (!containDefaultExecute) {
+                containDefaultExecute = tmpBasicAlarmThreshold.getLevel().equals(basicAlarmConfig.getLevel());
+            }
+
+
+            alarmThresholdList.add(tmpAlarmThreshold);
         }
 
 
-        Collections.sort(alarmThresholdList);
+        int thresholdSize = alarmThresholdList.size();
+        if (thresholdSize == 0) {
+            tmpAlarmThreshold = new AlarmThreshold();
+            tmpAlarmThreshold.setExecutor(alarmConfig.getExecutor());
+            tmpAlarmThreshold.setUsers(alarmConfig.getUsers());
+            tmpAlarmThreshold.setMin(alarmConfig.getMinLimit());
+            tmpAlarmThreshold.setMax(alarmConfig.getMaxLimit());
+            alarmThresholdList.add(tmpAlarmThreshold);
+        } else if (!containDefaultExecute) { // 不包含时，补全
+            tmpAlarmThreshold = new AlarmThreshold();
+            tmpAlarmThreshold.setExecutor(alarmConfig.getExecutor());
+            tmpAlarmThreshold.setUsers(alarmConfig.getUsers());
+            tmpAlarmThreshold.setMin(alarmConfig.getMinLimit());
+            tmpAlarmThreshold.setMax(alarmThresholdList.get(0).getMin());
+            alarmThresholdList.add(0, tmpAlarmThreshold);
+
+            if (alarmThresholdList.get(thresholdSize).getMax() < alarmConfig.getMaxLimit()) {
+                tmpAlarmThreshold = new AlarmThreshold();
+                tmpAlarmThreshold.setExecutor(alarmConfig.getExecutor());
+                tmpAlarmThreshold.setUsers(alarmConfig.getUsers());
+                tmpAlarmThreshold.setMin(alarmThresholdList.get(thresholdSize).getMax());
+                tmpAlarmThreshold.setMax(alarmConfig.getMaxLimit());
+                alarmThresholdList.add(tmpAlarmThreshold);
+            }
+        }
+
+
         alarmConfig.setAlarmThreshold(alarmThresholdList);
         return alarmConfig;
     }

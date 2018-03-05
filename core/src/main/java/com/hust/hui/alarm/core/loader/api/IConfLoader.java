@@ -1,7 +1,12 @@
 package com.hust.hui.alarm.core.loader.api;
 
-import com.hust.hui.alarm.core.loader.entity.RegisterInfo;
 import com.hust.hui.alarm.core.entity.AlarmConfig;
+import com.hust.hui.alarm.core.execut.AlarmExecuteSelector;
+import com.hust.hui.alarm.core.helper.ExecuteHelper;
+import com.hust.hui.alarm.core.loader.entity.RegisterInfo;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by yihui on 2018/2/7.
@@ -55,4 +60,18 @@ public interface IConfLoader {
     AlarmConfig getAlarmConfig(String alarmKey);
 
 
+    /**
+     * 获取报警执行器
+     *
+     * @param alarmKey
+     * @param count
+     * @return
+     */
+    default List<ExecuteHelper> getExecuteHelper(String alarmKey, int count) {
+        if (alarmEnable()) { // get alarm executor
+            return AlarmExecuteSelector.getExecute(getAlarmConfig(alarmKey), count);
+        } else {  // 报警关闭, 则走空报警流程, 将报警信息写入日志文件
+            return Collections.singletonList(AlarmExecuteSelector.getDefaultExecute());
+        }
+    }
 }
