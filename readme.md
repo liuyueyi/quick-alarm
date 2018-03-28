@@ -250,11 +250,11 @@ public void sendMsg() throws InterruptedException {
 4. [报警系统QuickAlarm之报警规则解析](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之报警规则解析/)
 5. [报警系统QuickAlarm之频率统计及接口封装](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之频率统计及接口封装/)
 6. [报警系统QuickAlarm使用手册](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm使用手册/)
-7. [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
 
 **v0.2版改进文档**
 
 1. [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
+
 
 ### 2. 历程
 
@@ -268,13 +268,18 @@ public void sendMsg() throws InterruptedException {
     - 扩展默认的报警配置项
     - 支持多重报警类型同时选择
     - 详情参考: [报警系统QuickAlarm之默认报警规则扩展](https://liuyueyi.github.io/hexblog/2018/03/05/报警系统QuickAlarm之默认报警规则扩展/)
+- [x] 2018.03.28
+    - 新增模板方式输出报警内容接口
+    - 新增指定报警用户的接口
+    - 支持多ConfLoader加载器同时生效，根据IConfLoader优先级排序，通过AlarmKey优先选择精确匹配的报警规则，都没有时，选择最高优先级的IConfLoader的兜底报警规则
+
 
 ### 3. todoList
 
-- 剥离报警规则和解析器，支持用户自定义
+- ~~剥离报警规则和解析器，支持用户自定义~~
 - 包装邮件报警方式
 - 包装微信报警方式
-- 支持多重报警类型同时选择
+- ~~支持多重报警类型同时选择~~
 
 
 ## VI. 其他
@@ -286,15 +291,15 @@ public void sendMsg() throws InterruptedException {
 
 ### 声明
 
-尽信书则不如，已上内容，纯属一家之言，因本人能力一般，见识有限，如发现bug或者有更好的建议，随时欢迎批评指正，我的微博地址: [小灰灰Blog](https://weibo.com/p/1005052169825577/home)
+尽信书则不如，以上内容，纯属一家之言，因本人能力一般，见识有限，如发现bug或者有更好的建议，随时欢迎批评指正，我的微博地址: [小灰灰Blog](https://weibo.com/p/1005052169825577/home)
 
 ### 扫描关注
 
 公众号&博客
 
-![QrCode](https://s17.mogucdn.com/mlcdn/c45406/180209_74fic633aebgh5dgfhid2fiiggc99_1220x480.png)
+![QrCode](https://gitee.com/liuyueyi/Source/raw/master/img/info/blogInfoV2.png)
 
 
 打赏码
 
-![pay](https://s3.mogucdn.com/mlcdn/c45406/180211_3a9igegd1bghf1dl26f3777aldijk_1218x478.png)
+![pay](https://gitee.com/liuyueyi/Source/raw/master/img/pay/pay.png)

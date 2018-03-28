@@ -28,6 +28,8 @@ public class PropertiesConfLoader implements IConfLoader {
 
     private Map<String, AlarmConfig> cacheMap;
 
+    private AlarmConfig defaultAlarmConfig;
+
     public boolean load() {
         // 获取注册信息
         registerInfo = RegisterInfoLoaderHelper.load();
@@ -52,24 +54,31 @@ public class PropertiesConfLoader implements IConfLoader {
         boolean ans = tmp != null;
         // 注册配置文件的变动
         ans = ans && PropertiesConfListenerHelper.registerConfChangeListener(file, this::init);
-
         if (ans) {
-            cacheMap = tmp;
+            log.info("PropertiesConfLoader registerConfChangeListener success!");
         }
         return ans;
     }
 
 
     private Map<String, AlarmConfig> init(File file) {
+        Map<String, AlarmConfig> tmp;
         try {
             // 正常来讲，是一个完整的json串
             List<String> list = IOUtils.readLines(new FileInputStream(file), "utf-8");
             String config = Joiner.on("").join(list);
-            return AlarmConfParse.parseConfig(config, Splitter.on(",").splitToList(registerInfo.getDefaultAlarmUsers()));
+            tmp = AlarmConfParse.parseConfig(config, Splitter.on(",").splitToList(registerInfo.getDefaultAlarmUsers()));
         } catch (IOException e) {
             log.error("load config into cacheMap error! e: {}", e);
             return null;
         }
+
+        if(tmp != null) {
+            cacheMap = tmp;
+            // 将默认的报警规则，缓存起来
+            defaultAlarmConfig = cacheMap.get(AlarmConfParse.DEFAULT_ALARM_KEY);
+        }
+        return tmp;
     }
 
 
@@ -79,17 +88,17 @@ public class PropertiesConfLoader implements IConfLoader {
     }
 
     @Override
-    public boolean alarmEnable() {
+    public boolean alarmEnable(String alarmKey) {
         return true;
     }
 
     @Override
-    public AlarmConfig getAlarmConfig(String alarmKey) {
-        AlarmConfig config = cacheMap.get(alarmKey);
-        if (config == null) {
-            return cacheMap.get(AlarmConfParse.DEFAULT_ALARM_KEY);
-        } else {
-            return config;
-        }
+    public boolean containAlarmConfig(String alarmKey) {
+        return cacheMap.containsKey(alarmKey);
+    }
+
+    @Override
+    public AlarmConfig getAlarmConfigOrDefault(String alarmKey) {
+        return cacheMap.getOrDefault(alarmKey, defaultAlarmConfig);
     }
 }

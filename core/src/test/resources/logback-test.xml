@@ -21,7 +21,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="com.hust.hui.quicksilver" level="DEBUG">
+    <logger name="com.hust.hui" level="DEBUG">
         <appender-ref ref="STDOUT" />
     </logger>
 
