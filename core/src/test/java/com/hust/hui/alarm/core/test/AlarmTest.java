@@ -23,8 +23,16 @@ public class AlarmTest {
         AlarmWrapper.getInstance().sendMsg("zzz", "不存在xxx异常配置", "报警嗒嗒嗒嗒");
 
 
-
         Thread.sleep(1000);
+    }
+
+
+    @Test
+    public void testMultiConfLoader() {
+        AlarmWrapper.getInstance().sendMsg("XXX", "指定默认ConfLoader报警", "报警内容!", "输出：{3}");
+
+
+        AlarmWrapper.getInstance().sendMsg("TTT", "SelfAlarmConfLoader报警", "报警内容!", "输出：{3}");
     }
 
 

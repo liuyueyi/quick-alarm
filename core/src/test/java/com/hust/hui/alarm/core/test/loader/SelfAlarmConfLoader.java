@@ -23,12 +23,17 @@ public class SelfAlarmConfLoader implements IConfLoader {
     }
 
     @Override
-    public boolean alarmEnable() {
+    public boolean alarmEnable(String alarmKey) {
         return true;
     }
 
     @Override
-    public AlarmConfig getAlarmConfig(String alarmKey) {
+    public boolean containAlarmConfig(String alarmKey) {
+        return true;
+    }
+
+    @Override
+    public AlarmConfig getAlarmConfigOrDefault(String alarmKey) {
         //db 查询，获取对应的配置信息
         // 下面是模拟，返回一个固定的配置
         AlarmConfig alarmConfig = new AlarmConfig();
@@ -43,6 +48,6 @@ public class SelfAlarmConfLoader implements IConfLoader {
 
     @Override
     public int order() {
-        return 0;
+        return 20;
     }
 }

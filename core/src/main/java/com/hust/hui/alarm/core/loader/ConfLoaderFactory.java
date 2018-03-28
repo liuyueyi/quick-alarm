@@ -35,17 +35,23 @@ public class ConfLoaderFactory {
         }
         list.sort(Comparator.comparingInt(IConfLoader::order));
 
+
+        List<IConfLoader> ans = new ArrayList<>(list.size());
+
         for (IConfLoader iConfLoader : list) {
             if (iConfLoader.load()) {
-                currentAlarmConfLoader = iConfLoader;
-                break;
+                ans.add(iConfLoader);
             }
         }
 
 
-        if (currentAlarmConfLoader == null) {
+        if (ans.isEmpty()) {
             throw new NoAlarmLoaderSpecifyException("no special alarmConfLoader selected!");
         }
+
+
+        // 将currentAlarmConfLoader 设置为代理类，内部实现根据报警类型，选择具体的报警解析规则，执行报警
+        currentAlarmConfLoader = new ConfLoaderProxy(ans);
     }
 
 

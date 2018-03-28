@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,18 +74,102 @@ public class AlarmWrapper {
     }
 
 
+    /**
+     * 报警接口
+     *
+     * @param key     报警类型
+     * @param content 报警内容
+     */
     public void sendMsg(String key, String content) {
-        sendMsg(new AlarmContent(key, null, content));
-    }
-
-
-    public void sendMsg(String key, String title, String content) {
-        sendMsg(new AlarmContent(key, title, content));
+        sendMsg(new AlarmContent(key, null, content, null, AlarmContent.DEFAULT_CONTENT_TEMPLATE));
     }
 
 
     /**
+     * 报警接口
      *
+     * @param key     报警类型
+     * @param title   报警标题, 如果为null，则会用默认的title来替换
+     * @param content 报警内容
+     */
+    public void sendMsg(String key, String title, String content) {
+        sendMsg(new AlarmContent(key, title, content, null, AlarmContent.DEFAULT_CONTENT_TEMPLATE));
+    }
+
+
+    /**
+     * 报警接口
+     *
+     * @param key      报警类型
+     * @param title    报警标题, 如果为null，则会用默认的title来替换
+     * @param content  报警内容
+     * @param template 报警模板，如果为null，表示选择默认的模板
+     *                 形如  " ip:{0} >>> key:{1} >>> 异常数:{2} >>> {3}"
+     *                 其中 0 表示会用当前机器的ip替换
+     *                 1 表示用报警类型 key 替换
+     *                 2 表示用当前的报警计数替换
+     *                 3 表示用报警内容 content 替换
+     *                 实例：
+     *                 - content 为 测试报警内容
+     *                 - 默认的一个报警内容为：  ip:127.0.0.1 >>> key:testAlarm >>> 异常数:10 >>> 测试报警内容
+     *                 - 若模板为: "{3}"， 则表示报警内容，就是content内容
+     *                 - 若模板为："{3}, 报警频率: {2}", 则报警内容为： 测试报警内容, 报警频率: 10
+     */
+    public void sendMsg(String key, String title, String content, String template) {
+        sendMsg(new AlarmContent(key, title, content, null, template));
+    }
+
+
+    /**
+     * 报警接口
+     *
+     * @param key     报警类型
+     * @param content 报警内容
+     * @param users   报警用户，如果指定，则以传入的用户为准；否则，报警用户为报警规则中指定的用户
+     */
+    public void sendMsgToUser(String key, String content, List<String> users) {
+        sendMsg(new AlarmContent(key, null, content, users, AlarmContent.DEFAULT_CONTENT_TEMPLATE));
+    }
+
+
+    /**
+     * 报警接口
+     *
+     * @param key     报警类型
+     * @param title   报警标题, 如果为null，则会用默认的title来替换
+     * @param content 报警内容
+     * @param users   报警用户，如果指定，则以传入的用户为准；否则，报警用户为报警规则中指定的用户
+     */
+    public void sendMsgToUser(String key, String title, String content, List<String> users) {
+        sendMsg(new AlarmContent(key, title, content, users, AlarmContent.DEFAULT_CONTENT_TEMPLATE));
+    }
+
+
+    /**
+     * 报警接口
+     *
+     * @param key      报警类型
+     * @param title    报警标题, 如果为null，则会用默认的title来替换
+     * @param content  报警内容
+     * @param template 报警模板，如果为null，表示选择默认的模板
+     *                 形如  " ip:{0} >>> key:{1} >>> 异常数:{2} >>> {3}"
+     *                 其中 0 表示会用当前机器的ip替换
+     *                 1 表示用报警类型 key 替换
+     *                 2 表示用当前的报警计数替换
+     *                 3 表示用报警内容 content 替换
+     *                 实例：
+     *                 - content 为 测试报警内容
+     *                 - 默认的一个报警内容为：  ip:127.0.0.1 >>> key:testAlarm >>> 异常数:10 >>> 测试报警内容
+     *                 - 若模板为: "{3}"， 则表示报警内容，就是content内容
+     *                 - 若模板为："{3}, 报警频率: {2}", 则报警内容为： 测试报警内容, 报警频率: 10
+     * @param users    报警用户，如果指定，则以传入的用户为准；否则，报警用户为报警规则中指定的用户
+     */
+    public void sendMsgToUser(String key, String title, String content, String template, List<String> users) {
+        sendMsg(new AlarmContent(key, title, content, users, template));
+    }
+
+
+    /**
      * 1. 报警计数
      * 2. 获取报警执行器
      * 3. 执行报警
@@ -110,7 +196,12 @@ public class AlarmWrapper {
 
 
     private void doSend(final ExecuteHelper executeHelper, final AlarmContent alarmContent) {
-        alarmExecutorService.execute(() -> executeHelper.getIExecute().sendMsg(executeHelper.getUsers(), alarmContent.getTitle(), alarmContent.getContent()));
+        alarmExecutorService.execute(() -> executeHelper.getIExecute().
+                sendMsg(
+                        // 如果显示指定了报警用户，则以指定的为准；否则选择报警规则的报警用户
+                        Optional.ofNullable(alarmContent.getAlarmUser()).orElse(executeHelper.getUsers()),
+                        alarmContent.getTitle(),
+                        alarmContent.getContent()));
     }
 
 
@@ -138,6 +229,7 @@ public class AlarmWrapper {
      */
     @ToString
     private static class AlarmContent {
+        static final String DEFAULT_CONTENT_TEMPLATE = " ip:{0} >>> key:{1} >>> 异常数:{2} >>> {3}";
 
         private static String LOCAL_IP;
 
@@ -153,7 +245,7 @@ public class AlarmWrapper {
             try {
                 PREFIX = "[" + ConfLoaderFactory.loader().getRegisterInfo().getAppName() + "]";
             } catch (Exception e) {
-                PREFIX = "[default]";
+                PREFIX = "[报警]";
             }
         }
 
@@ -162,12 +254,16 @@ public class AlarmWrapper {
         private String title;
         private String content;
         private int count;
+        private List<String> alarmUser;
+        private String template;
 
 
-        public AlarmContent(String key, String title, String content) {
+        public AlarmContent(String key, String title, String content, List<String> alarmUser, String template) {
             this.key = key;
             this.title = title;
             this.content = content;
+            this.alarmUser = alarmUser;
+            this.template = Optional.ofNullable(template).orElse(DEFAULT_CONTENT_TEMPLATE);
         }
 
         public String getTitle() {
@@ -185,7 +281,16 @@ public class AlarmWrapper {
 
 
         public String getContent() {
-            return " ip:" + LOCAL_IP + " >>> key:" + key + " >>> 异常数: " + count + " >>> " + content;
+            return MessageFormat.format(template, LOCAL_IP, key, count, content);
+        }
+
+
+        public List<String> getAlarmUser() {
+            if (alarmUser == null || alarmUser.isEmpty()) {
+                return null;
+            }
+
+            return alarmUser;
         }
     }
 }

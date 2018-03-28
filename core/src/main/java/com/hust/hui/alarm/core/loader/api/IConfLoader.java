@@ -48,16 +48,29 @@ public interface IConfLoader {
      *
      * @return
      */
-    boolean alarmEnable();
+    boolean alarmEnable(String alarmKey);
 
 
     /**
-     * 根据报警类型，获取对应的报警规则
+     * 判断alarmKey是否有明确的报警规则
      *
      * @param alarmKey
      * @return
      */
-    AlarmConfig getAlarmConfig(String alarmKey);
+    default boolean containAlarmConfig(String alarmKey) {
+        return true;
+    }
+
+
+    /**
+     * 根据报警类型，获取对应的报警规则
+     * <p>
+     * 如果 alarmKey 没有明确的配置， 则返回默认的兜底; 否则返回明确的配置
+     *
+     * @param alarmKey 报警类型
+     * @return
+     */
+    AlarmConfig getAlarmConfigOrDefault(String alarmKey);
 
 
     /**
@@ -68,8 +81,8 @@ public interface IConfLoader {
      * @return
      */
     default List<ExecuteHelper> getExecuteHelper(String alarmKey, int count) {
-        if (alarmEnable()) { // get alarm executor
-            return AlarmExecuteSelector.getExecute(getAlarmConfig(alarmKey), count);
+        if (alarmEnable(alarmKey)) { // get alarm executor
+            return AlarmExecuteSelector.getExecute(getAlarmConfigOrDefault(alarmKey), count);
         } else {  // 报警关闭, 则走空报警流程, 将报警信息写入日志文件
             return Collections.singletonList(AlarmExecuteSelector.getDefaultExecute());
         }
