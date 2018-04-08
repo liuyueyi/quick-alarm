@@ -11,6 +11,17 @@
 
     <groupId>com.hust.hui.alarm</groupId>
     <artifactId>common</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>
