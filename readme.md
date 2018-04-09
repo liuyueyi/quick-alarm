@@ -272,6 +272,9 @@ public void sendMsg() throws InterruptedException {
     - 新增模板方式输出报警内容接口
     - 新增指定报警用户的接口
     - 支持多ConfLoader加载器同时生效，根据IConfLoader优先级排序，通过AlarmKey优先选择精确匹配的报警规则，都没有时，选择最高优先级的IConfLoader的兜底报警规则
+- [x] 2018.04.08
+    - forkjoin并发框架完成
+    - 详情参考: [基于ForkJoin构建一个简单易用的并发组件](https://liuyueyi.github.io/hexblog/2018/04/09/基于ForkJoin构建一个简单易用的并发组件/)
 
 
 ### 3. todoList

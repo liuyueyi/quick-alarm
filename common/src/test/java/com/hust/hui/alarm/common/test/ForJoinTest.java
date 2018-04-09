@@ -6,6 +6,8 @@ import com.hust.hui.alarm.common.concurrent.forkjoin.IDataLoader;
 import lombok.Data;
 import org.junit.Test;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -20,6 +22,8 @@ public class ForJoinTest {
         public int mulAns;
 
         public String concatAns;
+
+        public Map<String, Object> ans = new ConcurrentHashMap<>();
     }
 
 
@@ -57,6 +61,31 @@ public class ForJoinTest {
         });
 
 
+        DefaultForkJoinDataLoader<Context> subTask = new DefaultForkJoinDataLoader<>(context);
+        subTask.addTask(new IDataLoader<Context>() {
+            @Override
+            public void load(Context context) {
+                System.out.println("sub thread1: " + Thread.currentThread() + " | now: " + System.currentTimeMillis());
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                context.ans.put(Thread.currentThread().getName(), System.currentTimeMillis());
+
+            }
+        });
+        subTask.addTask(new IDataLoader<Context>() {
+            @Override
+            public void load(Context context) {
+                System.out.println("sub thread2: " + Thread.currentThread() + " | now: " + System.currentTimeMillis());
+                context.ans.put(Thread.currentThread().getName(), System.currentTimeMillis());
+            }
+        });
+
+        loader.addTask(subTask);
+
+
         long start = System.currentTimeMillis();
         System.out.println("------- start: " + start);
 
@@ -67,9 +96,8 @@ public class ForJoinTest {
         System.out.println("------- end: " + (System.currentTimeMillis() - start));
 
         // 输出返回结果，要求3s后输出，所有的结果都设置完毕
-        System.out.println("the ans: "+  context);
-     }
-
+        System.out.println("the ans: " + context);
+    }
 
 
     @Test
