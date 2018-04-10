@@ -12,11 +12,26 @@ import java.io.Serializable;
 @Data
 public class RegisterInfo implements Serializable {
 
+    // 报警规则的路径
     private String alarmConfPath;
 
+    // 最多可配置的报警规则类型
     private Integer maxAlarmType;
 
+
+    // 默认的报警用户
     private String defaultAlarmUsers;
 
+
+    // 应用名
     private String appName;
+
+
+    // 报警规则配置信息
+    private String emailHost; // 如 smtp.163.com
+    private Integer emailPort; // 25
+    private String emailUname; // 发送邮件的用户名
+    private String emailToken; // 发送邮件的token
+    private String emailFrom; // 发送邮件的帐号
+
 }

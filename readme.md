@@ -275,12 +275,14 @@ public void sendMsg() throws InterruptedException {
 - [x] 2018.04.08
     - forkjoin并发框架完成
     - 详情参考: [基于ForkJoin构建一个简单易用的并发组件](https://liuyueyi.github.io/hexblog/2018/04/09/基于ForkJoin构建一个简单易用的并发组件/)
-
-
+- [x] 2018.04.10
+    - 完成邮件报警方式封装
+    - 使用姿势参考: [使用说明](plugin/email-plugin/readme.md) 
+    
 ### 3. todoList
 
 - ~~剥离报警规则和解析器，支持用户自定义~~
-- 包装邮件报警方式
+- ~~包装邮件报警方式~~
 - 包装微信报警方式
 - ~~支持多重报警类型同时选择~~
 
