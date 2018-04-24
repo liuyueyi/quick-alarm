@@ -242,6 +242,11 @@ public void sendMsg() throws InterruptedException {
 
 ### 1. 相关文档
 
+所有文档可以在个人博客查看汇总：
+
+1. [QuickAlarm博客汇总](https://liuyueyi.github.io/hexblog/categories/%E6%8A%80%E6%9C%AF/Quick%E7%B3%BB%E5%88%97%E9%A1%B9%E7%9B%AE/QuickAlarm/)
+
+
 **v0.1版相关文档**
 
 1. [报警系统QuickAlarm总纲](https://liuyueyi.github.io/hexblog/2018/02/09/报警系统QuickAlarm总纲/)
