@@ -9,27 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hust.hui.alarm</groupId>
-    <artifactId>email-plugin</artifactId>
-    <version>1.0</version>
-
+    <artifactId>timewindow-plugin</artifactId>
 
     <dependencies>
-        <!--email-->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>1.5</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.hust.hui.alarm</groupId>
-            <artifactId>core</artifactId>
-            <version>0.1</version>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>24.0-jre</version>
         </dependency>
     </dependencies>
 
