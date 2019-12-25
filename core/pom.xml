@@ -5,11 +5,12 @@
     <parent>
         <artifactId>quick-alarm</artifactId>
         <groupId>com.hust.hui.alarm</groupId>
-        <version>${alarm.version}</version>
+        <version>0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>core</artifactId>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>

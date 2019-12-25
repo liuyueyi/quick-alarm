@@ -125,7 +125,7 @@
 <dependency>
     <groupId>com.hust.hui.alarm</groupId>
     <artifactId>core</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
 </dependency>
 ```
 
@@ -255,6 +255,7 @@ public void sendMsg() throws InterruptedException {
 4. [报警系统QuickAlarm之报警规则解析](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之报警规则解析/)
 5. [报警系统QuickAlarm之频率统计及接口封装](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm之频率统计及接口封装/)
 6. [报警系统QuickAlarm使用手册](https://liuyueyi.github.io/hexblog/2018/02/11/报警系统QuickAlarm使用手册/)
+7. [报警系统Quick-Alarm-钉钉报警支持](https://liuyueyi.github.io/hexblog/2019/12/25/191225-Quick-Alarm-钉钉报警支持/)
 
 **v0.2版改进文档**
 
@@ -283,13 +284,29 @@ public void sendMsg() throws InterruptedException {
 - [x] 2018.04.10
     - 完成邮件报警方式封装
     - 使用姿势参考: [使用说明](plugin/email-plugin/readme.md) 
-    
+- [x] 2019.12.25
+    - 完成钉钉报警方式封装
+    - 使用姿势参考: [使用说明](plugin/dingding-plugin/readme.md)
+
+
 ### 3. todoList
 
 - ~~剥离报警规则和解析器，支持用户自定义~~
-- ~~包装邮件报警方式~~
-- 包装微信报警方式
+- ~~邮件报警方式~~
+- ~~钉钉报警~~
+- 短线报警方式
+- 微信报警方式
+- 电话报警方式
 - ~~支持多重报警类型同时选择~~
+
+### 4. 版本说明
+
+| 包 | 版本 | 说明 | 
+| --- | --- | --- |
+| `email-plugin` | 1.0  | 基本的邮件报警方式封装  | 
+| `email-plugin` | 1.1 | 支持ssl方式, 通过配置文件 emailSsl=true 开启 |
+| `dingding-plugin` | 1.0 | 基本的钉钉报警方式 | 
+| `core` | 1.0 | 正式包  | 
 
 
 ## VI. 其他

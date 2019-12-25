@@ -11,7 +11,7 @@
 
     <groupId>com.hust.hui.alarm</groupId>
     <artifactId>email-plugin</artifactId>
-    <version>${email-plugin.version}</version>
+    <version>1.1</version>
 
 
     <dependencies>
