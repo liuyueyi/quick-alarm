@@ -2,6 +2,7 @@ package com.hust.hui.alarm.plugin.email.wrapper;
 
 import com.hust.hui.alarm.core.loader.entity.RegisterInfo;
 import com.hust.hui.alarm.core.loader.helper.RegisterInfoLoaderHelper;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
@@ -21,8 +22,9 @@ public class EmailWrapper {
         htmlEmail.setSmtpPort(info.getEmailPort());
         htmlEmail.setFrom(info.getEmailFrom());
         htmlEmail.setAuthentication(info.getEmailUname(), info.getEmailToken());
+        if (BooleanUtils.isTrue(info.getEmailSsl())) {
+            htmlEmail.setSSLOnConnect(true);
+        }
         return htmlEmail;
     }
-
-
 }

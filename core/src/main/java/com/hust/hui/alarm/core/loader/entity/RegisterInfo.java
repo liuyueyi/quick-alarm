@@ -33,5 +33,6 @@ public class RegisterInfo implements Serializable {
     private String emailUname; // 发送邮件的用户名
     private String emailToken; // 发送邮件的token
     private String emailFrom; // 发送邮件的帐号
+    private Boolean emailSsl; // true 表示启用ssl发送
 
 }

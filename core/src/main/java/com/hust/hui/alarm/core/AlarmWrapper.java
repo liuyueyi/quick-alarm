@@ -5,6 +5,7 @@ import com.hust.hui.alarm.common.concurrent.DefaultThreadFactory;
 import com.hust.hui.alarm.core.helper.ExecuteHelper;
 import com.hust.hui.alarm.core.loader.ConfLoaderFactory;
 import com.hust.hui.alarm.core.loader.api.IConfLoader;
+import com.hust.hui.alarm.core.util.IpUtil;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,11 +237,7 @@ public class AlarmWrapper {
         private static String PREFIX;
 
         static {
-            try {
-                LOCAL_IP = InetAddress.getLocalHost().getHostAddress();
-            } catch (Exception e) {
-                LOCAL_IP = "127.0.0.1";
-            }
+            LOCAL_IP = IpUtil.getLocalIp();
 
             try {
                 PREFIX = "[" + ConfLoaderFactory.loader().getRegisterInfo().getAppName() + "]";

@@ -12,6 +12,7 @@
         <module>common</module>
         <module>core</module>
         <module>plugin</module>
+        <module>example</module>
     </modules>
 
     <properties>

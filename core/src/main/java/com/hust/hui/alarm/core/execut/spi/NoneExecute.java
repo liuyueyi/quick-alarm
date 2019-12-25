@@ -20,7 +20,7 @@ public class NoneExecute implements IExecute {
     @Override
     public void sendMsg(List<String> users, String title, String msg) {
         if (logger.isDebugEnabled()) {
-            logger.debug("{} execute! users: {}, title: {}, msg: {}", this.getName(), users, title, msg);
+            logger.debug("{} mock! users: {}, title: {}, msg: {}", this.getName(), users, title, msg);
         }
     }
 }

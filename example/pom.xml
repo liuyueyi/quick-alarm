@@ -9,28 +9,24 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.hust.hui.alarm</groupId>
-    <artifactId>plugin</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>email-plugin</module>
-        <module>dingding-plugin</module>
-    </modules>
-
-
-    <properties>
-        <email-plugin.version>1.0</email-plugin.version>
-    </properties>>
-
+    <artifactId>example</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.hust.hui.alarm</groupId>
             <artifactId>core</artifactId>
             <version>0.1</version>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hust.hui.alarm</groupId>
+            <artifactId>email-plugin</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hust.hui.alarm</groupId>
+            <artifactId>dingding-plugin</artifactId>
+            <version>0.1</version>
         </dependency>
     </dependencies>
-
 
 </project>
