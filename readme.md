@@ -287,13 +287,16 @@ public void sendMsg() throws InterruptedException {
 - [x] 2019.12.25
     - 完成钉钉报警方式封装
     - 使用姿势参考: [使用说明](plugin/dingding-plugin/readme.md)
-
+- [x] 2020.04.21
+    - 完成飞书报警方式封装
+    - 使用姿势参考: [使用说明](plugin/feishu-plugin/readme.md)
 
 ### 3. todoList
 
 - ~~剥离报警规则和解析器，支持用户自定义~~
 - ~~邮件报警方式~~
 - ~~钉钉报警~~
+- ~~飞书报警~~
 - 短线报警方式
 - 微信报警方式
 - 电话报警方式
@@ -306,12 +309,13 @@ public void sendMsg() throws InterruptedException {
 | `email-plugin` | 1.0  | 基本的邮件报警方式封装  | 
 | `email-plugin` | 1.1 | 支持ssl方式, 通过配置文件 emailSsl=true 开启 |
 | `dingding-plugin` | 1.0 | 基本的钉钉报警方式 | 
+| `feishu-plugin` | 1.0 | 基本的飞书报警方式 | 
 | `core` | 1.0 | 正式包  | 
 
 
 ## VI. 其他
 
-### 个人博客： [Z+|blog](https://liuyueyi.github.io/hexblog)
+### 个人博客： [一灰灰blog](https://liuyueyi.github.io/hexblog)
 
 基于hexo + github pages搭建的个人博客，记录所有学习和工作中的博文，欢迎大家前去逛逛
 
