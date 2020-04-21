@@ -11,7 +11,7 @@ public class TestFeishuPublisher {
     @Test
     public void testPublish() throws IOException {
         String ans =
-                FeishuPublisher.doPost("飞书", "测试报警", "d40647dba96545e699457618b5568af5");
+                FeishuPublisher.doPost("飞书", "测试报警", "");
         System.out.println(ans);
     }
 
