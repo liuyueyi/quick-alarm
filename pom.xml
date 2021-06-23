@@ -21,7 +21,7 @@
         <lombok.version>1.16.8</lombok.version>
         <logback.version>1.2.0</logback.version>
         <slf4j-api.version>1.7.21</slf4j-api.version>
-        <junit.versin>4.12</junit.versin>
+        <junit.versin>4.13.1</junit.versin>
     </properties>
 
     <dependencyManagement>
